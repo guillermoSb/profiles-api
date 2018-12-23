@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 
+
 # Create your models here.
 class UserProfileManager(BaseUserManager):
     """ Helps django to work with custom user """
@@ -50,4 +51,21 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         """ Convert object to string """
         return self.email
+
+
+class ProfileFeedItem(models.Model):
+    """ profile status update """
+    user_profile = models.ForeignKey("UserProfile", on_delete=models.CASCADE)
+    status_text = models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now_add=True)
+    contributors = models.ManyToManyField("Contributor")
+    def __str__(self):
+        """ Return the model as a string """
+        return self.status_text
+    
+class Contributor(models.Model):
+    name = models.CharField(max_length=50)
+    address = models.CharField(max_length=50)
+    def __str__(self):
+        return self.name
     
